@@ -89,6 +89,16 @@
             updatePosition();
             
             ctx.clearRect(0, 0, 750, 750);
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, 750, 750);
+            
+            squares[hash].x = lerp(squares[hash].prevX, squares[hash].destX, squares[hash].alpha);
+            squares[hash].y = lerp(squares[hash].prevY, squares[hash].destY, squares[hash].alpha);
+            
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            ctx.arc((squares[hash].x + (squares[hash].width/2)), (squares[hash].y + (squares[hash].height/2)), 150, 0, 2*Math.PI);
+            ctx.fill();
             
             const keys = Object.keys(squares);
             for(let i = 0; i < keys.length; i++) {
@@ -105,7 +115,20 @@
                 square.x = lerp(square.prevX, square.destX, square.alpha);
                 square.y = lerp(square.prevY, square.destY, square.alpha);
                 
-                ctx.fillRect(square.x, square.y, square.width, square.height);
+                let centerX = square.x + (square.width/2);
+                let centerY = square.y + (square.height/2);
+                let ownCenterX = squares[hash].x + (squares[hash].width/2);
+                let ownCenterY = squares[hash].y + (squares[hash].height/2);
+                
+                if (
+                    centerX >= ownCenterX - 150 &&
+                    centerX <= ownCenterX + 150 &&
+                    centerY >= ownCenterY - 150 &&
+                    centerY <= ownCenterY + 150
+                )
+                {
+                    ctx.fillRect(square.x, square.y, square.width, square.height);
+                }
             }
             requestAnimationFrame(draw);
         };
